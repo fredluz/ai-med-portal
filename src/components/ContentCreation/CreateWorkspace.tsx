@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { 
   MessageSquare, 
-  FileTemplate, 
+  FileText, 
   Settings, 
   Sparkles,
   Target,
@@ -85,7 +84,7 @@ const CreateWorkspace = () => {
           <div className="flex space-x-1 mb-6 bg-white rounded-lg p-1 medical-shadow w-fit">
             {[
               { id: 'chat', label: 'AI Chat', icon: MessageSquare },
-              { id: 'templates', label: 'Templates', icon: FileTemplate },
+              { id: 'templates', label: 'Templates', icon: FileText },
               { id: 'config', label: 'Configuration', icon: Settings }
             ].map((tab) => {
               const Icon = tab.icon;
