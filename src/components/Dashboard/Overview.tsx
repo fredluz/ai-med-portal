@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   FileText, 
@@ -186,10 +185,18 @@ const Overview = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-purple-500 rounded-full" />
+                  <span className="text-sm font-medium">Requested</span>
+                </div>
+                <span className="text-sm font-bold">8 articles</span>
+              </div>
+              
               <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-blue-500 rounded-full" />
-                  <span className="text-sm font-medium">Draft</span>
+                  <span className="text-sm font-medium">AI Generated</span>
                 </div>
                 <span className="text-sm font-bold">12 articles</span>
               </div>
@@ -197,7 +204,7 @@ const Overview = () => {
               <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="w-3 h-3 bg-amber-500 rounded-full" />
-                  <span className="text-sm font-medium">In Review</span>
+                  <span className="text-sm font-medium">Reviewing</span>
                 </div>
                 <span className="text-sm font-bold">5 articles</span>
               </div>
