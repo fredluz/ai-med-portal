@@ -9,7 +9,8 @@ import {
   Settings,
   Folder,
   Calendar,
-  Archive
+  Archive,
+  BarChart2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +23,7 @@ interface SidebarProps {
 const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3, badge: null },
+    { id: 'dashboard2', label: 'Dashboard 2', icon: BarChart2, badge: null },
     { id: 'create', label: 'Create Content', icon: Edit3, badge: null },
     { id: 'review', label: 'Review Queue', icon: CheckCircle, badge: '5' },
     { id: 'library', label: 'Content Library', icon: FileText, badge: null },

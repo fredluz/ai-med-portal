@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Header from '@/components/Layout/Header';
 import Sidebar from '@/components/Layout/Sidebar';
 import Overview from '@/components/Dashboard/Overview';
+import Dashboard2 from '@/components/Dashboard/Dashboard2';
 import CreateWorkspace from '@/components/ContentCreation/CreateWorkspace';
 import ReviewDashboard from '@/components/ContentReview/ReviewDashboard';
 
@@ -13,6 +14,8 @@ const Index = () => {
     switch (activeTab) {
       case 'dashboard':
         return <Overview />;
+      case 'dashboard2':
+        return <Dashboard2 />;
       case 'create':
         return <CreateWorkspace />;
       case 'review':
