@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   CheckCircle, 
@@ -16,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AIChat from './AIChat';
 
 const ReviewDashboard = () => {
@@ -114,87 +114,333 @@ const ReviewDashboard = () => {
     {
       id: 3,
       title: "Attention-Deficit/Hyperactivity Disorder (ADHD): Clinical Overview",
-      author: "Dr. Michael Thompson, MD",
+      author: "Dr. Stephen Brian Sulkes, MD & Dr. Alicia R. Pekarsky, MD",
       language: "English",
       status: "pending",
       created: "2024-01-16",
-      wordCount: 2134,
+      wordCount: 4850,
       readingLevel: "Medical Professional",
-      tags: ["adhd", "diagnosis", "treatment", "clinical-guidelines"],
+      tags: ["adhd", "diagnosis", "treatment", "clinical-guidelines", "neurodevelopmental"],
       content: `
-        <h1>Attention-Deficit/Hyperactivity Disorder (ADHD): Clinical Overview</h1>
-        
-        <h2>Diagnostic Criteria</h2>
-        <p>
-          ADHD is diagnosed based on DSM-5 criteria, requiring evidence of inattention and/or 
-          hyperactivity-impulsivity that interferes with functioning or development. Symptoms must:
-        </p>
-        
-        <ul>
-          <li>Be present for at least 6 months</li>
-          <li>Occur in multiple settings (home, school, work)</li>
-          <li>Be inappropriate for developmental level</li>
-          <li>Directly impact social, academic, or occupational functioning</li>
-        </ul>
+        <div class="medical-article" style="max-width: 100%; font-family: system-ui, -apple-system, sans-serif;">
+          <!-- Hero Section -->
+          <div class="hero-section" style="background: linear-gradient(135deg, #00468C 0%, #1e5a96 100%); color: white; padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; right: 0; width: 200px; height: 200px; opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white"/><circle cx="50" cy="30" r="1.5" fill="white"/><circle cx="80" cy="15" r="1" fill="white"/><circle cx="30" cy="60" r="2.5" fill="white"/><circle cx="70" cy="70" r="1.8" fill="white"/><circle cx="40" cy="85" r="1.2" fill="white"/></svg>');"></div>
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; position: relative;">Attention-Deficit/Hyperactivity Disorder (ADHD)</h1>
+            <div style="font-size: 1.1rem; margin-bottom: 0.5rem; position: relative;">
+              <strong>By</strong> Stephen Brian Sulkes, MD, Golisano Children's Hospital at Strong, University of Rochester School of Medicine and Dentistry<br>
+              Alicia R. Pekarsky, MD, State University of New York Upstate Medical University, Upstate Golisano Children's Hospital
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.9; position: relative;">
+              Reviewed/Revised Apr 2024 | Modified Sept 2024
+            </div>
+          </div>
 
-        <h2>Clinical Presentation</h2>
-        <p>
-          ADHD presents with persistent patterns of inattention and/or hyperactivity-impulsivity. 
-          The disorder is categorized into three presentations:
-        </p>
-        
-        <h3>Predominantly Inattentive Presentation</h3>
-        <ul>
-          <li>Difficulty sustaining attention in tasks or play activities</li>
-          <li>Frequent careless mistakes in schoolwork or other activities</li>
-          <li>Appears not to listen when spoken to directly</li>
-          <li>Fails to follow through on instructions</li>
-          <li>Difficulty organizing tasks and activities</li>
-        </ul>
+          <!-- Sticky Navigation -->
+          <div class="nav-tabs" style="background: #f8f9fa; border-bottom: 2px solid #dee2e6; margin-bottom: 2rem; position: sticky; top: 0; z-index: 10;">
+            <div style="display: flex; gap: 2rem; padding: 1rem; overflow-x: auto;">
+              <a href="#symptoms" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Symptoms & Signs</a>
+              <a href="#diagnosis" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Diagnosis</a>
+              <a href="#treatment" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Treatment</a>
+              <a href="#prognosis" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Prognosis</a>
+              <a href="#key-points" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Key Points</a>
+              <a href="#more-info" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">More Info</a>
+            </div>
+          </div>
 
-        <h3>Predominantly Hyperactive-Impulsive Presentation</h3>
-        <ul>
-          <li>Fidgets with hands or feet or squirms in seat</li>
-          <li>Leaves seat in situations when remaining seated is expected</li>
-          <li>Runs about or climbs in inappropriate situations</li>
-          <li>Unable to play or engage in leisure activities quietly</li>
-          <li>Often "on the go" or acts as if "driven by a motor"</li>
-        </ul>
+          <!-- Overview Section -->
+          <div style="margin-bottom: 2rem;">
+            <p style="font-size: 1.1rem; line-height: 1.6; color: #212529; margin-bottom: 1.5rem;">
+              Attention-deficit/hyperactivity disorder (ADHD) is a syndrome of inattention, hyperactivity, and impulsivity. 
+              The 3 types of ADHD are predominantly inattentive, predominantly hyperactive/impulsive, and combined. 
+              Diagnosis is made by clinical criteria. Treatment usually includes pharmacotherapy with stimulant or other medication, 
+              behavioral therapy, and educational interventions.
+            </p>
 
-        <h2>Pharmacological Management</h2>
-        <p>
-          First-line treatment typically involves stimulant medications, including:
-        </p>
-        
-        <h3>Methylphenidate-based medications:</h3>
-        <ul>
-          <li>Immediate-release: 2.5-5mg BID/TID, titrated to effect</li>
-          <li>Extended-release formulations for once-daily dosing</li>
-        </ul>
+            <!-- Prevalence Info Box -->
+            <div style="background: #F5B600; color: #212529; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; border-left: 5px solid #00468C;">
+              <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; font-weight: 700;">Prevalence</h3>
+              <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">ADHD affects an estimated 5-15% of children</p>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.95rem;">Approximately twice as common in boys overall, with variation by subtype</p>
+            </div>
 
-        <h3>Amphetamine-based medications:</h3>
-        <ul>
-          <li>Starting dose: 5mg daily, increased by 5mg weekly</li>
-          <li>Maximum recommended dose varies by formulation</li>
-        </ul>
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1.5rem;">
+              Attention-deficit/hyperactivity disorder (ADHD) is one type of neurodevelopmental disorder. 
+              Neurodevelopmental disorders are neurologically based conditions that appear early in childhood, 
+              typically before school entry, and impair development of personal, social, academic, and/or occupational functioning.
+            </p>
+          </div>
 
-        <div class="bg-amber-50 border-l-4 border-amber-400 p-4 my-4">
-          <p class="text-sm">
-            <strong>Clinical Note:</strong> Monitor for cardiovascular effects, growth suppression, 
-            and psychiatric symptoms. Regular follow-up appointments are essential for optimal management.
-          </p>
+          <!-- DSM-5-TR Symptom Clusters Table -->
+          <div style="margin: 2rem 0;">
+            <h3 style="color: #00468C; font-size: 1.3rem; margin-bottom: 1rem;">DSM-5-TR Symptom Clusters</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+              <div style="border: 2px solid #00468C; border-radius: 8px; padding: 1.5rem; background: #f8f9fa;">
+                <h4 style="color: #00468C; margin: 0 0 1rem 0; font-size: 1.1rem;">Inattention (≥6 symptoms)</h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Does not pay attention to details</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Difficulty sustaining attention</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Does not seem to listen</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Does not follow through on instructions</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Difficulty organizing tasks</li>
+                </ul>
+              </div>
+              <div style="border: 2px solid #00468C; border-radius: 8px; padding: 1.5rem; background: #f8f9fa;">
+                <h4 style="color: #00468C; margin: 0 0 1rem 0; font-size: 1.1rem;">Hyperactivity (≥6 symptoms)</h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often fidgets with hands or feet</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often leaves seat inappropriately</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often runs about or climbs excessively</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Difficulty playing quietly</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often "on the go"</li>
+                </ul>
+              </div>
+              <div style="border: 2px solid #00468C; border-radius: 8px; padding: 1.5rem; background: #f8f9fa;">
+                <h4 style="color: #00468C; margin: 0 0 1rem 0; font-size: 1.1rem;">Impulsivity (≥6 symptoms)</h4>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often blurts out answers</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Difficulty awaiting turn</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often interrupts or intrudes</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Often talks excessively</li>
+                  <li style="margin-bottom: 0.5rem; padding-left: 1rem; position: relative;">• Acts without thinking</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Symptoms & Signs Section -->
+          <section id="symptoms" style="margin: 3rem 0;">
+            <h2 style="color: #00468C; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #F5B600; padding-bottom: 0.5rem;">Symptoms and Signs of ADHD</h2>
+            
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1.5rem;">
+              Onset often occurs before age 4 and invariably before age 12. The peak age for diagnosis is between ages 8 and 10; 
+              however, patients with the predominantly inattentive type may not be diagnosed until after adolescence.
+            </p>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 1.5rem 0 1rem 0;">Core symptoms and signs of ADHD involve:</h3>
+            
+            <div style="background: #f8f9fa; border-left: 4px solid #00468C; padding: 1.5rem; margin: 1.5rem 0;">
+              <ul style="margin: 0; padding-left: 1.5rem;">
+                <li style="margin-bottom: 1rem;"><strong>Inattention:</strong> Tends to appear when a child is involved in tasks that require vigilance, rapid reaction time, visual and perceptual search, and systematic and sustained listening.</li>
+                <li style="margin-bottom: 1rem;"><strong>Impulsivity:</strong> Refers to hasty actions that have the potential for a negative outcome (e.g., in children, running across a street without looking; in adolescents and adults, suddenly quitting school or a job without thought for the consequences).</li>
+                <li style="margin-bottom: 0;"><strong>Hyperactivity:</strong> Involves excessive motor activity. Children, particularly younger ones, may have trouble sitting quietly when expected to (e.g., in school or church).</li>
+              </ul>
+            </div>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 2rem 0 1rem 0;">ADHD in Adults</h3>
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1rem;">
+              Although ADHD is considered a disorder of children and always starts during childhood, the underlying neurophysiologic 
+              differences persist into adult life, and behavioral symptoms continue to be evident in adulthood in approximately half of cases.
+            </p>
+            
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1rem;">In adults, symptoms include:</p>
+            <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+              <li>Difficulty concentrating</li>
+              <li>Difficulty completing tasks (executive function impairments)</li>
+              <li>Mood swings</li>
+              <li>Impatience</li>
+              <li>Difficulty in maintaining relationships</li>
+            </ul>
+          </section>
+
+          <!-- Diagnosis Section -->
+          <section id="diagnosis" style="margin: 3rem 0;">
+            <h2 style="color: #00468C; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #F5B600; padding-bottom: 0.5rem;">Diagnosis of ADHD</h2>
+            
+            <div style="background: #f8f9fa; border: 2px solid #00468C; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+              <h3 style="color: #00468C; margin: 0 0 1rem 0;">Clinical criteria based on the DSM-5-TR</h3>
+              <p style="margin: 0; line-height: 1.6;">
+                Diagnosis of ADHD is clinical and is based on comprehensive medical, developmental, educational, and psychological evaluations.
+              </p>
+            </div>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 2rem 0 1rem 0;">DSM-5-TR Diagnostic Criteria</h3>
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1rem;">
+              DSM-5-TR diagnostic criteria include 9 symptoms and signs of inattention and 9 of hyperactivity and impulsivity. 
+              Diagnosis using these criteria requires ≥ 6 symptoms and signs from one or each group. Also, the symptoms need to:
+            </p>
+            <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+              <li>Be present often for ≥ 6 months</li>
+              <li>Be more pronounced than expected for the child's developmental level</li>
+              <li>Occur in at least 2 situations (e.g., home and school)</li>
+              <li>Be present before age 12 (at least some symptoms)</li>
+              <li>Interfere with functioning at home, school, or work</li>
+            </ul>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 2rem 0 1rem 0;">Other Diagnostic Considerations</h3>
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1rem;">
+              Differentiating between ADHD and other conditions can be challenging. Overdiagnosis must be avoided, and other conditions 
+              must be accurately identified. Many ADHD signs expressed during the preschool years could also indicate communication 
+              problems that can occur in other neurodevelopmental disorders.
+            </p>
+          </section>
+
+          <!-- Treatment Section with Accordion -->
+          <section id="treatment" style="margin: 3rem 0;">
+            <h2 style="color: #00468C; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #F5B600; padding-bottom: 0.5rem;">Treatment of ADHD</h2>
+            
+            <div style="background: #f8f9fa; border-left: 4px solid #F5B600; padding: 1.5rem; margin: 1.5rem 0;">
+              <ul style="margin: 0; padding-left: 1.5rem; font-weight: 600;">
+                <li>Behavioral therapy</li>
+                <li>Medication therapy, typically with stimulants such as methylphenidate or dextroamphetamine</li>
+              </ul>
+            </div>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 2rem 0 1rem 0;">Treatment Recommendations by Age</h3>
+            <div style="margin: 1.5rem 0;">
+              <div style="background: white; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 1rem;">
+                <div style="background: #00468C; color: white; padding: 1rem; border-radius: 8px 8px 0 0;">
+                  <h4 style="margin: 0; font-size: 1.1rem;">Preschool-aged children</h4>
+                </div>
+                <div style="padding: 1rem;">
+                  <p style="margin: 0; line-height: 1.6;">
+                    Initial treatment is with behavioral therapy. Medications may be considered if the response to behavioral 
+                    interventions is inadequate or if the symptoms are moderate-to-severe.
+                  </p>
+                </div>
+              </div>
+              
+              <div style="background: white; border: 1px solid #dee2e6; border-radius: 8px;">
+                <div style="background: #00468C; color: white; padding: 1rem; border-radius: 8px 8px 0 0;">
+                  <h4 style="margin: 0; font-size: 1.1rem;">School-aged children</h4>
+                </div>
+                <div style="padding: 1rem;">
+                  <p style="margin: 0; line-height: 1.6;">
+                    Initial treatment is behavioral therapy in combination with medications. Randomized trials show that behavioral 
+                    therapy alone is less effective than therapy with stimulant medications alone, while the combination is best.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 2rem 0 1rem 0;">Medication Details</h3>
+            
+            <!-- Stimulant Medications Accordion would go here -->
+            <div style="border: 1px solid #dee2e6; border-radius: 8px; margin: 1rem 0;">
+              <div style="background: #f8f9fa; padding: 1rem; border-bottom: 1px solid #dee2e6; cursor: pointer;">
+                <h4 style="margin: 0; color: #00468C; font-size: 1.1rem;">▼ Stimulant Medications - Detailed Dosing</h4>
+              </div>
+              <div style="padding: 1rem; display: block;">
+                <h5 style="color: #00468C; margin: 0 0 1rem 0;">Methylphenidate</h5>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;">
+                  <thead>
+                    <tr style="background: #f8f9fa;">
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Formulation</th>
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Starting Dose</th>
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Frequency</th>
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Immediate-release</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Lowest dose</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Once daily, increase weekly to 2-3 times/day</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Every 4 hours during waking hours</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Extended-release</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Equivalent to IR dose</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Once daily</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Avoids school administration</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h5 style="color: #00468C; margin: 1.5rem 0 1rem 0;">Dextroamphetamine</h5>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr style="background: #f8f9fa;">
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Formulation</th>
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Starting Dose</th>
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Frequency</th>
+                      <th style="border: 1px solid #dee2e6; padding: 0.75rem; text-align: left;">Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Immediate-release</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Once daily</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Increase to 2-3 times/day</td>
+                      <td style="border: 1px solid #dee2e6; padding: 0.75rem;">Doses ~2/3 of methylphenidate</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <h3 style="color: #00468C; font-size: 1.3rem; margin: 2rem 0 1rem 0;">Nonstimulant Medications</h3>
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1rem;">
+              <strong>Atomoxetine,</strong> a selective norepinephrine reuptake inhibitor, is also used. The medication is effective, 
+              but data are mixed regarding its efficacy compared with stimulants. Some children have nausea, sedation, irritability, 
+              and temper tantrums; rarely, liver toxicity and suicidal ideation occur.
+            </p>
+          </section>
+
+          <!-- Prognosis Section -->
+          <section id="prognosis" style="margin: 3rem 0;">
+            <h2 style="color: #00468C; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #F5B600; padding-bottom: 0.5rem;">Prognosis for ADHD</h2>
+            
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1.5rem;">
+              Traditional classrooms and academic activities often exacerbate symptoms and signs in children with untreated or 
+              inadequately treated ADHD. Social and emotional adjustment problems may be persistent. Poor acceptance by peers 
+              and loneliness tend to increase with age and with the obvious display of symptoms.
+            </p>
+
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0;">
+              <h3 style="color: #856404; margin: 0 0 1rem 0;">Predictors of Poor Outcomes</h3>
+              <ul style="margin: 0; padding-left: 1.5rem; color: #856404;">
+                <li>Coexisting low intelligence</li>
+                <li>Aggressiveness</li>
+                <li>Social and interpersonal problems</li>
+                <li>Parental mental or behavioral health disorders</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Key Points Section -->
+          <section id="key-points" style="margin: 3rem 0;">
+            <h2 style="color: #00468C; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #F5B600; padding-bottom: 0.5rem;">Key Points</h2>
+            
+            <div style="background: #00468C; color: white; border-radius: 8px; padding: 2rem;">
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 1.1rem; line-height: 1.8;">
+                <li style="margin-bottom: 1rem;">ADHD involves inattention, hyperactivity/impulsivity, or a combination; it typically appears before age 12, including in preschoolers.</li>
+                <li style="margin-bottom: 1rem;">Cause is unknown, but there are numerous suspected risk factors.</li>
+                <li style="margin-bottom: 1rem;">Diagnose using clinical criteria, and be alert for other disorders that may initially manifest similarly.</li>
+                <li style="margin-bottom: 1rem;">Manifestations tend to diminish with age, but adolescents and adults may have residual difficulties.</li>
+                <li style="margin-bottom: 0;">Treat with stimulant medications and cognitive-behavioral therapy; behavioral therapy alone may be appropriate for preschool-aged children.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- More Information Section -->
+          <section id="more-info" style="margin: 3rem 0;">
+            <h2 style="color: #00468C; font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 3px solid #F5B600; padding-bottom: 0.5rem;">More Information</h2>
+            
+            <p style="line-height: 1.6; color: #212529; margin-bottom: 1.5rem;">
+              The following English-language resources may be useful. Please note that THE MANUAL is not responsible for the content of these resources.
+            </p>
+
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 1.5rem;">
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8;">
+                <li style="margin-bottom: 1rem;"><a href="#" style="color: #00468C; text-decoration: none; font-weight: 500;">American Academy of Pediatrics: Clinical Practice Guideline for the Diagnosis, Evaluation, and Treatment of Attention-Deficit/Hyperactivity Disorder in Children and Adolescents (2019)</a></li>
+                <li style="margin-bottom: 1rem;"><a href="#" style="color: #00468C; text-decoration: none; font-weight: 500;">National Institute for Children's Health Quality: Vanderbilt Assessment Scale</a></li>
+                <li style="margin-bottom: 1rem;"><a href="#" style="color: #00468C; text-decoration: none; font-weight: 500;">Attention Deficit Disorder Association (ADDA)</a></li>
+                <li style="margin-bottom: 0;"><a href="#" style="color: #00468C; text-decoration: none; font-weight: 500;">Children and Adults with Attention-Deficit/Hyperactivity Disorder (CHADD)</a></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- References Section -->
+          <section style="margin: 3rem 0; border-top: 2px solid #dee2e6; padding-top: 2rem;">
+            <h3 style="color: #00468C; font-size: 1.3rem; margin-bottom: 1rem;">References</h3>
+            <div style="font-size: 0.9rem; line-height: 1.6; color: #495057;">
+              <p style="margin-bottom: 1rem;">1. Boznovik K, McLamb F, O'Connell K, et al: U.S. national, regional, and state‑specific socioeconomic factors correlate with child and adolescent ADHD diagnoses. <em>Sci Rep</em> 11:22008, 2021.</p>
+              <p style="margin-bottom: 1rem;">2. Wolraich ML, Hagan JF Jr, Allan C, et al: Clinical Practice Guideline for the Diagnosis, Evaluation, and Treatment of Attention-Deficit/Hyperactivity Disorder in Children and Adolescents. <em>Pediatrics</em> 144(4):e20192528, 2019.</p>
+              <p style="margin-bottom: 0;">3. Cortese S, Adamo N, Del Giovane C, et al: Comparative efficacy and tolerability of medications for attention-deficit hyperactivity disorder in children, adolescents, and adults: a systematic review and network meta-analysis. <em>Lancet Psychiatry</em> 5(9):727–738, 2018.</p>
+            </div>
+          </section>
         </div>
-
-        <h2>Non-Pharmacological Interventions</h2>
-        <p>
-          Behavioral interventions should be considered as part of comprehensive treatment:
-        </p>
-        <ul>
-          <li>Cognitive-behavioral therapy (CBT)</li>
-          <li>Parent training programs</li>
-          <li>School-based interventions</li>
-          <li>Lifestyle modifications (exercise, sleep hygiene)</li>
-        </ul>
       `
     },
     {
