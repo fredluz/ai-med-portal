@@ -23,30 +23,20 @@ const Header = () => {
             <p className="text-xs text-muted-foreground">AI-Powered Health Content</p>
           </div>
         </div>
-        
-        <nav className="hidden md:flex items-center space-x-6">
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-            Dashboard
-          </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-            Content Library
-          </Button>
-          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-            Analytics
-          </Button>
-        </nav>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="relative">
+      <div className="flex items-center space-x-4 flex-1 max-w-2xl mx-6">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
             type="text"
-            placeholder="Search content..."
-            className="w-64 pl-10 pr-4 py-2 bg-muted/50 border border-border/50 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+            placeholder="Search content AI assisted..."
+            className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border/50 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
+      </div>
 
+      <div className="flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="flex items-center space-x-2">
