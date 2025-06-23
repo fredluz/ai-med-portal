@@ -26,10 +26,10 @@ const PatientEducationArticle = () => {
           aria-hidden="true"
         />
         <div className="relative max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
             ADHD in the Teen Years — 2025 Update
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100">
+          <p className="text-xl md:text-2xl mb-8 text-white">
             Symptoms • Treatment • Driving Safety • Parent Playbook
           </p>
           <Button 

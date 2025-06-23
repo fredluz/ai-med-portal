@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   CheckCircle, 
@@ -8,7 +9,8 @@ import {
   User,
   Calendar,
   Tag,
-  FileText
+  FileText,
+  Edit
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -139,12 +141,12 @@ const ReviewDashboard = () => {
           <!-- Hero Section -->
           <div class="hero-section" style="background: linear-gradient(135deg, #00468C 0%, #1e5a96 100%); color: white; padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden;">
             <div style="position: absolute; top: 0; right: 0; width: 200px; height: 200px; opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white"/><circle cx="50" cy="30" r="1.5" fill="white"/><circle cx="80" cy="15" r="1" fill="white"/><circle cx="30" cy="60" r="2.5" fill="white"/><circle cx="70" cy="70" r="1.8" fill="white"/><circle cx="40" cy="85" r="1.2" fill="white"/></svg>');"></div>
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; position: relative;">Attention-Deficit/Hyperactivity Disorder (ADHD)</h1>
-            <div style="font-size: 1.1rem; margin-bottom: 0.5rem; position: relative;">
+            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; position: relative; color: white;">Attention-Deficit/Hyperactivity Disorder (ADHD)</h1>
+            <div style="font-size: 1.1rem; margin-bottom: 0.5rem; position: relative; color: white;">
               <strong>By</strong> Stephen Brian Sulkes, MD, Golisano Children's Hospital at Strong, University of Rochester School of Medicine and Dentistry<br>
               Alicia R. Pekarsky, MD, State University of New York Upstate Medical University, Upstate Golisano Children's Hospital
             </div>
-            <div style="font-size: 0.9rem; opacity: 0.9; position: relative;">
+            <div style="font-size: 0.9rem; opacity: 0.9; position: relative; color: white;">
               Reviewed/Revised Apr 2024 | Modified Sept 2024
             </div>
           </div>
@@ -218,6 +220,64 @@ const ReviewDashboard = () => {
       setShowRejectDialog(false);
       setRejectComment('');
     }
+  };
+
+  const handlePreview = () => {
+    if (selectedContent) {
+      const newWindow = window.open('', '_blank', 'width=1200,height=800');
+      if (newWindow) {
+        newWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>${selectedContent.title}</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <script src="https://cdn.tailwindcss.com"></script>
+            <style>
+              .medical-shadow { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+              .prose { max-width: none; }
+              .prose h1 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+              .prose h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; margin-top: 1.5rem; }
+              .prose h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; margin-top: 1rem; }
+              .prose p { margin-bottom: 1rem; line-height: 1.6; }
+              .prose ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+              .prose li { margin-bottom: 0.5rem; }
+            </style>
+          </head>
+          <body>
+            <div id="root"></div>
+            <script type="module">
+              import React from 'https://esm.sh/react@18';
+              import ReactDOM from 'https://esm.sh/react-dom@18/client';
+              
+              const content = ${JSON.stringify(typeof selectedContent.content === 'string' ? selectedContent.content : '')};
+              
+              function App() {
+                return React.createElement('div', {
+                  className: 'min-h-screen bg-gray-50 p-8'
+                }, React.createElement('div', {
+                  className: 'max-w-4xl mx-auto bg-white rounded-lg medical-shadow p-8'
+                }, content ? React.createElement('div', {
+                  className: 'prose prose-lg max-w-none',
+                  dangerouslySetInnerHTML: { __html: content }
+                }) : React.createElement('div', {}, 'Content not available for preview')));
+              }
+              
+              const root = ReactDOM.createRoot(document.getElementById('root'));
+              root.render(React.createElement(App));
+            </script>
+          </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+    }
+  };
+
+  const handleEdit = () => {
+    console.log('Edit content:', selectedContent?.title);
+    // Add edit logic here
   };
 
   const currentArticles = getAllArticles();
@@ -376,6 +436,27 @@ const ReviewDashboard = () => {
                         {selectedContent.content}
                       </div>
                     )}
+                  </div>
+
+                  {/* Article Action Buttons */}
+                  <div className="mt-6 flex justify-center space-x-4">
+                    <Button 
+                      variant="outline"
+                      onClick={handleEdit}
+                      className="flex items-center space-x-2 px-6 py-2"
+                    >
+                      <Edit className="w-4 h-4" />
+                      <span>Edit</span>
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      onClick={handlePreview}
+                      className="flex items-center space-x-2 px-6 py-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      <span>Preview</span>
+                    </Button>
                   </div>
                 </div>
               </div>
