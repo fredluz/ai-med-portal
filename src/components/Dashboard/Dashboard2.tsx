@@ -16,12 +16,22 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 
 const Dashboard2 = () => {
   const topStats = [
     {
-      title: "Research Phase",
+      title: "Total Articles Published",
+      value: "147",
+      subtitle: "from last week",
+      change: "+22%",
+      trend: "up",
+      icon: FileText,
+      color: "text-emerald-600"
+    },
+    {
+      title: "Requested",
       value: "23",
       subtitle: "from last week",
       change: "+15%",
@@ -30,31 +40,22 @@ const Dashboard2 = () => {
       color: "text-blue-600"
     },
     {
-      title: "Fact-Checking",
+      title: "In Review",
+      value: "5",
+      subtitle: "from last week",
+      change: "-20%",
+      trend: "down",
+      icon: Clock,
+      color: "text-amber-600"
+    },
+    {
+      title: "Approved",
       value: "18",
       subtitle: "from last week",
       change: "+8%",
       trend: "up",
       icon: CheckCircle,
       color: "text-green-600"
-    },
-    {
-      title: "Writing Phase",
-      value: "12",
-      subtitle: "from last week",
-      change: "-3%",
-      trend: "down",
-      icon: Edit3,
-      color: "text-purple-600"
-    },
-    {
-      title: "Published",
-      value: "147",
-      subtitle: "from last week",
-      change: "+22%",
-      trend: "up",
-      icon: FileText,
-      color: "text-emerald-600"
     }
   ];
 
@@ -201,7 +202,7 @@ const Dashboard2 = () => {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-foreground mb-2">Advanced Analytics Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-foreground mb-2">Content Lab Dashboard</h1>
         <p className="text-muted-foreground">Comprehensive view of your medical content creation pipeline and performance metrics</p>
       </div>
 
@@ -276,10 +277,13 @@ const Dashboard2 = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Article Production Pipeline */}
+        {/* Recent Activity */}
         <Card className="medical-shadow">
           <CardHeader>
-            <CardTitle>Article Production Pipeline - Last 30 Days</CardTitle>
+            <CardTitle className="flex items-center justify-between">
+              <span>Recent Activity</span>
+              <Button variant="outline" size="sm">View All</Button>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

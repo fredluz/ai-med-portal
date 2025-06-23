@@ -22,8 +22,8 @@ interface SidebarProps {
 
 const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, badge: null },
-    { id: 'dashboard2', label: 'Dashboard 2', icon: BarChart2, badge: null },
+    { id: 'dashboard', label: 'Content Performance', icon: BarChart3, badge: null },
+    { id: 'dashboard2', label: 'Content Lab Dash', icon: BarChart2, badge: null },
     { id: 'create', label: 'Create Content', icon: Edit3, badge: null },
     { id: 'review', label: 'Review Queue', icon: CheckCircle, badge: '5' },
     { id: 'library', label: 'Content Library', icon: FileText, badge: null },
