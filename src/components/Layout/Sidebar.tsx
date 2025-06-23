@@ -7,10 +7,10 @@ import {
   BarChart3, 
   Users, 
   Settings,
-  Folder,
   Calendar,
   Archive,
-  BarChart2
+  BarChart2,
+  TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,8 +27,7 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     { id: 'create', label: 'Create Content', icon: Edit3, badge: null },
     { id: 'review', label: 'Review Queue', icon: CheckCircle, badge: '5' },
     { id: 'library', label: 'Content Library', icon: FileText, badge: null },
-    { id: 'templates', label: 'Templates', icon: Folder, badge: null },
-    { id: 'schedule', label: 'Publishing', icon: Calendar, badge: '2' },
+    { id: 'schedule', label: 'Marketing', icon: TrendingUp, badge: '2' },
     { id: 'archive', label: 'Archive', icon: Archive, badge: null },
     { id: 'users', label: 'User Management', icon: Users, badge: null },
     { id: 'settings', label: 'Settings', icon: Settings, badge: null },

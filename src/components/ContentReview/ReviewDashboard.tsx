@@ -63,14 +63,14 @@ const ReviewDashboard = () => {
 
   return (
     <div className="flex h-full bg-gray-50">
-      {/* Content List */}
-      <div className="w-80 bg-white border-r border-border/50 overflow-y-auto">
-        <div className="p-6 border-b border-border/50">
-          <h2 className="text-lg font-semibold text-foreground">Review Queue</h2>
-          <p className="text-sm text-muted-foreground mt-1">5 items awaiting review</p>
+      {/* Content List - Reduced width by 50% */}
+      <div className={`${showAIChat ? 'w-32' : 'w-40'} bg-white border-r border-border/50 overflow-y-auto transition-all duration-300`}>
+        <div className="p-4 border-b border-border/50">
+          <h2 className="text-sm font-semibold text-foreground">Review Queue</h2>
+          <p className="text-xs text-muted-foreground mt-1">5 items awaiting review</p>
         </div>
         
-        <div className="p-4 space-y-3">
+        <div className="p-2 space-y-2">
           {contentItems.map((item) => (
             <Card 
               key={item.id} 
@@ -79,20 +79,20 @@ const ReviewDashboard = () => {
               }`}
               onClick={() => setSelectedContent(item)}
             >
-              <CardContent className="p-4">
-                <h3 className="font-medium text-sm text-foreground mb-2 line-clamp-2">
+              <CardContent className="p-3">
+                <h3 className="font-medium text-xs text-foreground mb-2 line-clamp-2">
                   {item.title}
                 </h3>
                 
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <div className="flex items-center text-xs text-muted-foreground">
-                    <User className="w-3 h-3 mr-1" />
-                    {item.author}
+                    <User className="w-2 h-2 mr-1" />
+                    <span className="truncate">{item.author}</span>
                   </div>
                   
                   <div className="flex items-center text-xs text-muted-foreground">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {item.created}
+                    <Calendar className="w-2 h-2 mr-1" />
+                    <span className="truncate">{item.created}</span>
                   </div>
                   
                   <div className="flex items-center justify-between">
@@ -100,16 +100,8 @@ const ReviewDashboard = () => {
                       {item.language}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {item.wordCount} words
+                      {item.wordCount}w
                     </span>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {item.tags.slice(0, 2).map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
                   </div>
                 </div>
               </CardContent>
@@ -210,11 +202,11 @@ const ReviewDashboard = () => {
               )}
             </div>
 
-            {/* Action Bar */}
+            {/* Action Bar with more attractive buttons */}
             <div className="bg-white border-t border-border/50 p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <Badge variant="outline" className="text-sm">
+                  <Badge variant="outline" className="text-sm px-3 py-1 border-amber-200 bg-amber-50 text-amber-800">
                     Medical Review Required
                   </Badge>
                   <span className="text-sm text-muted-foreground">
@@ -222,17 +214,20 @@ const ReviewDashboard = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <Button 
                     variant="outline"
                     onClick={() => setShowRejectDialog(true)}
-                    className="text-destructive hover:text-destructive"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300 px-6 py-2 font-medium transition-all duration-200"
                   >
                     <XCircle className="w-4 h-4 mr-2" />
                     Reject
                   </Button>
                   
-                  <Button onClick={handleApprove} className="bg-success text-success-foreground hover:bg-success/90">
+                  <Button 
+                    onClick={handleApprove} 
+                    className="bg-green-600 text-white hover:bg-green-700 px-6 py-2 font-medium shadow-md hover:shadow-lg transition-all duration-200"
+                  >
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Approve & Publish
                   </Button>
@@ -265,7 +260,7 @@ const ReviewDashboard = () => {
                     <Button 
                       onClick={handleReject}
                       disabled={!rejectComment.trim()}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      className="bg-red-600 text-white hover:bg-red-700"
                     >
                       Reject Content
                     </Button>

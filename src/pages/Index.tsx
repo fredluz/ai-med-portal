@@ -6,6 +6,7 @@ import Overview from '@/components/Dashboard/Overview';
 import Dashboard2 from '@/components/Dashboard/Dashboard2';
 import CreateWorkspace from '@/components/ContentCreation/CreateWorkspace';
 import ReviewDashboard from '@/components/ContentReview/ReviewDashboard';
+import ContentLibrary from '@/components/ContentLibrary/ContentLibrary';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -21,24 +22,12 @@ const Index = () => {
       case 'review':
         return <ReviewDashboard />;
       case 'library':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Content Library</h2>
-            <p className="text-muted-foreground">Browse your published medical content.</p>
-          </div>
-        );
-      case 'templates':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Templates</h2>
-            <p className="text-muted-foreground">Manage your content templates.</p>
-          </div>
-        );
+        return <ContentLibrary />;
       case 'schedule':
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Publishing Schedule</h2>
-            <p className="text-muted-foreground">Schedule and manage content publication.</p>
+            <h2 className="text-2xl font-semibold mb-4">Marketing</h2>
+            <p className="text-muted-foreground">Manage your content marketing and promotion strategies.</p>
           </div>
         );
       case 'archive':
