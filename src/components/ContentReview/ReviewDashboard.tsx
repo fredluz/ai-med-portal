@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   CheckCircle, 
@@ -20,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AIChat from './AIChat';
 import PatientEducationArticle from './PatientEducationArticle';
+import MedicalADHDArticle from './MedicalADHDArticle';
 
 const ReviewDashboard = () => {
   const [selectedContent, setSelectedContent] = useState(null);
@@ -136,51 +136,7 @@ const ReviewDashboard = () => {
       wordCount: 4850,
       readingLevel: "Medical Professional",
       tags: ["adhd", "diagnosis", "treatment", "clinical-guidelines", "neurodevelopmental"],
-      content: `
-        <div class="medical-article" style="max-width: 100%; font-family: system-ui, -apple-system, sans-serif;">
-          <!-- Hero Section -->
-          <div class="hero-section" style="background: linear-gradient(135deg, #00468C 0%, #1e5a96 100%); color: white; padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden;">
-            <div style="position: absolute; top: 0; right: 0; width: 200px; height: 200px; opacity: 0.1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white"/><circle cx="50" cy="30" r="1.5" fill="white"/><circle cx="80" cy="15" r="1" fill="white"/><circle cx="30" cy="60" r="2.5" fill="white"/><circle cx="70" cy="70" r="1.8" fill="white"/><circle cx="40" cy="85" r="1.2" fill="white"/></svg>');"></div>
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; position: relative; color: white;">Attention-Deficit/Hyperactivity Disorder (ADHD)</h1>
-            <div style="font-size: 1.1rem; margin-bottom: 0.5rem; position: relative; color: white;">
-              <strong>By</strong> Stephen Brian Sulkes, MD, Golisano Children's Hospital at Strong, University of Rochester School of Medicine and Dentistry<br>
-              Alicia R. Pekarsky, MD, State University of New York Upstate Medical University, Upstate Golisano Children's Hospital
-            </div>
-            <div style="font-size: 0.9rem; opacity: 0.9; position: relative; color: white;">
-              Reviewed/Revised Apr 2024 | Modified Sept 2024
-            </div>
-          </div>
-
-          <!-- Sticky Navigation -->
-          <div class="nav-tabs" style="background: #f8f9fa; border-bottom: 2px solid #dee2e6; margin-bottom: 2rem; position: sticky; top: 0; z-index: 10;">
-            <div style="display: flex; gap: 2rem; padding: 1rem; overflow-x: auto;">
-              <a href="#symptoms" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Symptoms & Signs</a>
-              <a href="#diagnosis" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Diagnosis</a>
-              <a href="#treatment" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Treatment</a>
-              <a href="#prognosis" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Prognosis</a>
-              <a href="#key-points" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">Key Points</a>
-              <a href="#more-info" style="color: #00468C; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-bottom: 2px solid transparent; transition: all 0.2s;">More Info</a>
-            </div>
-          </div>
-
-          <!-- Overview Section -->
-          <div style="margin-bottom: 2rem;">
-            <p style="font-size: 1.1rem; line-height: 1.6; color: #212529; margin-bottom: 1.5rem;">
-              Attention-deficit/hyperactivity disorder (ADHD) is a syndrome of inattention, hyperactivity, and impulsivity. 
-              The 3 types of ADHD are predominantly inattentive, predominantly hyperactive/impulsive, and combined. 
-              Diagnosis is made by clinical criteria. Treatment usually includes pharmacotherapy with stimulant or other medication, 
-              behavioral therapy, and educational interventions.
-            </p>
-
-            <!-- Prevalence Info Box -->
-            <div style="background: #F5B600; color: #212529; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; border-left: 5px solid #00468C;">
-              <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; font-weight: 700;">Prevalence</h3>
-              <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">ADHD affects an estimated 5-15% of children</p>
-              <p style="margin: 0.5rem 0 0 0; font-size: 0.95rem;">Approximately twice as common in boys overall, with variation by subtype</p>
-            </div>
-          </div>
-        </div>
-      `
+      content: <MedicalADHDArticle />
     },
     {
       id: 5,
