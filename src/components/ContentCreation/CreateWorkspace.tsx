@@ -1,15 +1,16 @@
+
 import React, { useState } from 'react';
 import { 
   MessageSquare, 
   FileText, 
-  Settings, 
   Sparkles,
   Target,
   Globe,
   Palette,
   TrendingUp,
   BookOpen,
-  Stethoscope
+  Stethoscope,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,32 +25,34 @@ import {
 } from '@/components/ui/select';
 
 const CreateWorkspace = () => {
-  const [activeTab, setActiveTab] = useState('chat');
+  const [activeTab, setActiveTab] = useState('writer');
   const [chatMessage, setChatMessage] = useState('');
   const [selectedModel, setSelectedModel] = useState('gpt-4.1');
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  const [viewMode, setViewMode] = useState('main'); // 'main' or 'template-detail'
 
   const templates = [
     {
       id: 1,
-      title: "Condition Overview",
-      description: "Comprehensive guide about medical conditions",
-      category: "General",
+      title: "Medical Content",
+      description: "Comprehensive medical information structure",
+      category: "Medical",
       icon: Stethoscope,
       color: "bg-blue-500"
     },
     {
       id: 2,
-      title: "Treatment Guide",
-      description: "Step-by-step treatment information",
-      category: "Treatment",
+      title: "Portal Patient article",
+      description: "Patient-focused educational content",
+      category: "Patient Education",
       icon: BookOpen,
       color: "bg-green-500"
     },
     {
       id: 3,
-      title: "Prevention Tips",
-      description: "Preventive care and lifestyle advice",
-      category: "Prevention",
+      title: "Pharma MKT content",
+      description: "Pharmaceutical marketing materials",
+      category: "Marketing",
       icon: Target,
       color: "bg-purple-500"
     }
@@ -69,6 +72,122 @@ const CreateWorkspace = () => {
     setChatMessage('');
   };
 
+  const handleTemplateClick = (templateId: number) => {
+    if (templateId === 1) { // Medical Content template
+      setViewMode('template-detail');
+    }
+  };
+
+  const renderTemplateDetail = () => {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button 
+            variant="ghost" 
+            onClick={() => setViewMode('main')}
+            className="text-primary hover:text-primary/80"
+          >
+            ← Back to Templates
+          </Button>
+        </div>
+
+        <Card className="medical-shadow">
+          <CardHeader>
+            <div className="flex items-center space-x-3">
+              <div className="p-2 rounded-lg bg-blue-500">
+                <Stethoscope className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <CardTitle>Medical Content Template</CardTitle>
+                <p className="text-sm text-muted-foreground">Comprehensive medical information structure</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h3 className="font-semibold mb-3">Template Structure</h3>
+              <div className="bg-muted/30 rounded-lg p-4 font-mono text-sm">
+                <div className="space-y-1">
+                  <div className="font-semibold">Article/</div>
+                  <div className="ml-4">├── epidemiology</div>
+                  <div className="ml-4">├── pathophysiology</div>
+                  <div className="ml-4">├── symptoms_and_signs</div>
+                  <div className="ml-4">├── diagnosis</div>
+                  <div className="ml-4">├── treatment</div>
+                  <div className="ml-4">├── prognosis</div>
+                  <div className="ml-4">├── prevention</div>
+                  <div className="ml-4">└── key_points</div>
+                  <div className="mt-2">└── related_articles/</div>
+                  <div className="mt-1">└── references/</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3">Section Descriptions</h3>
+              <div className="space-y-3">
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Epidemiology</h4>
+                  <p className="text-xs text-muted-foreground">Statistical data about disease occurrence and distribution</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Pathophysiology</h4>
+                  <p className="text-xs text-muted-foreground">Biological mechanisms underlying the condition</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Symptoms & Signs</h4>
+                  <p className="text-xs text-muted-foreground">Clinical manifestations and observable indicators</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Diagnosis</h4>
+                  <p className="text-xs text-muted-foreground">Diagnostic criteria, tests, and procedures</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Treatment</h4>
+                  <p className="text-xs text-muted-foreground">Therapeutic options and management strategies</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Prognosis</h4>
+                  <p className="text-xs text-muted-foreground">Expected outcomes and recovery expectations</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Prevention</h4>
+                  <p className="text-xs text-muted-foreground">Preventive measures and risk reduction strategies</p>
+                </div>
+                <div className="border rounded-lg p-3">
+                  <h4 className="font-medium text-sm">Key Points</h4>
+                  <p className="text-xs text-muted-foreground">Essential takeaways and summary information</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <Button className="flex-1">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Use This Template
+              </Button>
+              <Button variant="outline">
+                Edit Template
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
+  if (viewMode === 'template-detail') {
+    return (
+      <div className="h-full bg-gray-50 flex">
+        <div className="flex-1 p-6">
+          <div className="max-w-4xl mx-auto">
+            {renderTemplateDetail()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full bg-gray-50 flex">
       {/* Main Content Area */}
@@ -83,9 +202,8 @@ const CreateWorkspace = () => {
           {/* Tab Navigation */}
           <div className="flex space-x-1 mb-6 bg-white rounded-lg p-1 medical-shadow w-fit">
             {[
-              { id: 'chat', label: 'AI Chat', icon: MessageSquare },
-              { id: 'templates', label: 'Templates', icon: FileText },
-              { id: 'config', label: 'Configuration', icon: Settings }
+              { id: 'writer', label: 'AI Writer', icon: MessageSquare },
+              { id: 'templates', label: 'Templates', icon: FileText }
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -107,7 +225,7 @@ const CreateWorkspace = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {activeTab === 'chat' && (
+              {activeTab === 'writer' && (
                 <Card className="medical-shadow">
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
@@ -116,22 +234,39 @@ const CreateWorkspace = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <span className="text-sm font-medium">Model:</span>
-                      <Select value={selectedModel} onValueChange={setSelectedModel}>
-                        <SelectTrigger className="w-48">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="gpt-4.1">GPT-4.1 (Recommended)</SelectItem>
-                          <SelectItem value="claude-4">Claude 4 Opus</SelectItem>
-                          <SelectItem value="claude-sonnet">Claude 4 Sonnet</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Badge variant="outline" className="text-xs">
-                        Medical-trained model
-                      </Badge>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium">Model:</span>
+                        <Select value={selectedModel} onValueChange={setSelectedModel}>
+                          <SelectTrigger className="flex-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="gpt-4.1">GPT-4.1 (Recommended)</SelectItem>
+                            <SelectItem value="claude-4">Claude 4 Opus</SelectItem>
+                            <SelectItem value="claude-sonnet">Claude 4 Sonnet</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium">Template:</span>
+                        <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                          <SelectTrigger className="flex-1">
+                            <SelectValue placeholder="Select template" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="medical">Medical Content</SelectItem>
+                            <SelectItem value="patient">Portal Patient article</SelectItem>
+                            <SelectItem value="pharma">Pharma MKT content</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
+
+                    <Badge variant="outline" className="text-xs">
+                      Medical-trained model
+                    </Badge>
 
                     <Textarea
                       value={chatMessage}
@@ -156,14 +291,24 @@ const CreateWorkspace = () => {
               {activeTab === 'templates' && (
                 <Card className="medical-shadow">
                   <CardHeader>
-                    <CardTitle>Content Templates</CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>Content Templates</CardTitle>
+                      <Button size="sm" className="flex items-center space-x-2">
+                        <Plus className="w-4 h-4" />
+                        <span>New Template</span>
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {templates.map((template) => {
                         const Icon = template.icon;
                         return (
-                          <Card key={template.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                          <Card 
+                            key={template.id} 
+                            className="cursor-pointer hover:shadow-md transition-shadow"
+                            onClick={() => handleTemplateClick(template.id)}
+                          >
                             <CardContent className="p-4">
                               <div className="flex items-start space-x-3">
                                 <div className={`p-2 rounded-lg ${template.color}`}>
@@ -185,13 +330,17 @@ const CreateWorkspace = () => {
                   </CardContent>
                 </Card>
               )}
+            </div>
 
-              {activeTab === 'config' && (
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Content Configuration - only show in writer tab */}
+              {activeTab === 'writer' && (
                 <Card className="medical-shadow">
                   <CardHeader>
-                    <CardTitle>Content Configuration</CardTitle>
+                    <CardTitle className="text-base">Content Configuration</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Target Audience</label>
                       <Select>
@@ -250,10 +399,7 @@ const CreateWorkspace = () => {
                   </CardContent>
                 </Card>
               )}
-            </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
               {/* Research Suggestions */}
               <Card className="medical-shadow">
                 <CardHeader>
