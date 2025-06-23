@@ -7,7 +7,8 @@ import {
   TrendingUp,
   Globe,
   AlertCircle,
-  Calendar
+  Calendar,
+  UserCheck
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -207,6 +208,14 @@ const Overview = () => {
                   <span className="text-sm font-medium">Reviewing</span>
                 </div>
                 <span className="text-sm font-bold">5 articles</span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-indigo-500 rounded-full" />
+                  <span className="text-sm font-medium">Approved</span>
+                </div>
+                <span className="text-sm font-bold">4 articles</span>
               </div>
               
               <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">

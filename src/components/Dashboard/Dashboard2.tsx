@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Search, 
@@ -12,7 +11,8 @@ import {
   Users,
   Clock,
   Eye,
-  Target
+  Target,
+  UserCheck
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -93,7 +93,46 @@ const Dashboard2 = () => {
     { title: "Research & Evidence", subtitle: "Gathering sources & citations", value: "23", icon: Search },
     { title: "Fact-Checking", subtitle: "Validating sources & accuracy", value: "18", icon: CheckCircle },
     { title: "Writing & SEO", subtitle: "Creating patient-friendly content", value: "12", icon: Edit3 },
-    { title: "Reviewing", subtitle: "Final quality check & approval", value: "7", icon: Eye }
+    { title: "Reviewing", subtitle: "Final quality check & approval", value: "7", icon: Eye },
+    { title: "Approved", subtitle: "Ready for publication", value: "4", icon: UserCheck },
+    { title: "Published", subtitle: "Live content", value: "147", icon: FileText }
+  ];
+
+  const pipelineArticles = [
+    {
+      title: "Understanding Hypertension",
+      author: "Joe Doe",
+      time: "2 hours ago",
+      status: "Requested",
+      color: "bg-gray-100 text-gray-800"
+    },
+    {
+      title: "Diabetes Prevention Guide",
+      time: "3 hours ago",
+      status: "AI Generated",
+      color: "bg-blue-100 text-blue-800"
+    },
+    {
+      title: "Managing Chronic Pain",
+      author: "Dr. Smith",
+      time: "4 hours ago",
+      status: "Reviewing",
+      color: "bg-amber-100 text-amber-800"
+    },
+    {
+      title: "Heart Disease Prevention",
+      author: "Dr. Johnson",
+      time: "6 hours ago",
+      status: "Approved",
+      color: "bg-purple-100 text-purple-800"
+    },
+    {
+      title: "Understanding Anxiety Disorders",
+      author: "Medical Team",
+      time: "1 day ago",
+      status: "Published",
+      color: "bg-green-100 text-green-800"
+    }
   ];
 
   const recentArticles = [
@@ -243,8 +282,29 @@ const Dashboard2 = () => {
             <CardTitle>Article Production Pipeline - Last 30 Days</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-end justify-center space-x-2">
-              <div className="text-xs text-muted-foreground mb-2">Week-by-week production visualization would go here</div>
+            <div className="space-y-4">
+              {pipelineArticles.map((article, index) => (
+                <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted/50">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <Badge className={article.color}>
+                        {article.status.toUpperCase()}
+                      </Badge>
+                    </div>
+                    <p className="text-sm font-medium text-foreground">{article.title}</p>
+                    <div className="flex items-center mt-1 text-xs text-muted-foreground">
+                      {article.author && (
+                        <>
+                          <span>{article.author}</span>
+                          <span className="mx-1">•</span>
+                        </>
+                      )}
+                      <Clock className="w-3 h-3 mr-1" />
+                      <span>{article.time}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
