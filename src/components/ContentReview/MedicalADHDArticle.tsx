@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, ExternalLink, PlayCircle, BookOpen, HelpCircle, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -96,12 +95,12 @@ const MedicalADHDArticle = () => {
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Main Content */}
-          <div className="flex-1 max-w-4xl">
-            {/* Overview */}
-            <section className="mb-12">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Main Content */}
+        <div className="w-full">
+          {/* Overview */}
+          <section className="mb-12">
+            
               <p className="text-lg leading-relaxed text-gray-800 mb-6">
                 Attention-deficit/hyperactivity disorder (ADHD) is a syndrome of inattention, hyperactivity, and impulsivity. 
                 The 3 types of ADHD are predominantly inattentive, predominantly hyperactive/impulsive, and combined. 
@@ -136,10 +135,12 @@ const MedicalADHDArticle = () => {
                   neurologic underpinnings and is not simply "misbehavior."
                 </p>
               </div>
-            </section>
+            
+          </section>
 
-            {/* Symptoms & Signs */}
-            <section id="symptoms" className="scroll-mt-20 mb-12">
+          {/* Symptoms & Signs */}
+          <section id="symptoms" className="scroll-mt-20 mb-12">
+            
               <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
                 Symptoms and Signs of ADHD
               </h2>
@@ -197,10 +198,12 @@ const MedicalADHDArticle = () => {
                   </div>
                 </CardContent>
               </Card>
-            </section>
+            
+          </section>
 
-            {/* Diagnosis */}
-            <section id="diagnosis" className="scroll-mt-20 mb-12">
+          {/* Diagnosis */}
+          <section id="diagnosis" className="scroll-mt-20 mb-12">
+            
               <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
                 Diagnosis of ADHD
               </h2>
@@ -255,10 +258,12 @@ const MedicalADHDArticle = () => {
                   </div>
                 </CardContent>
               </Card>
-            </section>
+            
+          </section>
 
-            {/* Treatment */}
-            <section id="treatment" className="scroll-mt-20 mb-12">
+          {/* Treatment */}
+          <section id="treatment" className="scroll-mt-20 mb-12">
+            
               <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
                 Treatment of ADHD
               </h2>
@@ -409,10 +414,12 @@ const MedicalADHDArticle = () => {
                   </div>
                 </CardContent>
               </Card>
-            </section>
+            
+          </section>
 
-            {/* Prognosis */}
-            <section id="prognosis" className="scroll-mt-20 mb-12">
+          {/* Prognosis */}
+          <section id="prognosis" className="scroll-mt-20 mb-12">
+            
               <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
                 Prognosis for ADHD
               </h2>
@@ -439,10 +446,12 @@ const MedicalADHDArticle = () => {
                   particularly if they can find jobs that do not require intense attention to perform.
                 </p>
               </div>
-            </section>
+            
+          </section>
 
-            {/* Key Points */}
-            <section id="key-points" className="scroll-mt-20 mb-12">
+          {/* Key Points */}
+          <section id="key-points" className="scroll-mt-20 mb-12">
+            
               <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
                 Key Points
               </h2>
@@ -458,10 +467,12 @@ const MedicalADHDArticle = () => {
                   </ul>
                 </CardContent>
               </Card>
-            </section>
+            
+          </section>
 
-            {/* More Information */}
-            <section id="more-info" className="scroll-mt-20 mb-12">
+          {/* More Information */}
+          <section id="more-info" className="scroll-mt-20 mb-12">
+            
               <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
                 More Information
               </h2>
@@ -498,95 +509,101 @@ const MedicalADHDArticle = () => {
                   </div>
                 </div>
               </div>
-            </section>
-          </div>
+            
+          </section>
 
-          {/* Right Sidebar */}
-          <div className="w-64 space-y-6">
-            {/* Topic Resources */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Topic Resources</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="text-sm text-gray-600">
-                  <div>3D Models (0)</div>
-                  <div>Audios (0)</div>
-                  <div>Calculators (0)</div>
-                  <div>Images (0)</div>
-                  <div>Tables (0)</div>
-                </div>
-                <Button variant="outline" size="sm" className="w-full flex items-center space-x-2">
-                  <PlayCircle className="w-4 h-4" />
-                  <span>Videos (1)</span>
-                </Button>
-              </CardContent>
-            </Card>
+          {/* Bottom Cards Section - Previously in Sidebar */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold mb-6" style={{ color: '#00468C' }}>
+              Additional Resources
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Topic Resources */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Topic Resources</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="text-sm text-gray-600">
+                    <div>3D Models (0)</div>
+                    <div>Audios (0)</div>
+                    <div>Calculators (0)</div>
+                    <div>Images (0)</div>
+                    <div>Tables (0)</div>
+                  </div>
+                  <Button variant="outline" size="sm" className="w-full flex items-center space-x-2">
+                    <PlayCircle className="w-4 h-4" />
+                    <span>Videos (1)</span>
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Related Tables */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Related Tables</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
-                    <div>
-                      <div className="font-medium text-sm">DSM-5-TR Criteria</div>
-                      <div className="text-xs text-gray-500">Diagnostic criteria table</div>
-                    </div>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
-                    <div>
-                      <div className="font-medium text-sm">Medication Dosing</div>
-                      <div className="text-xs text-gray-500">Stimulant dosing guidelines</div>
-                    </div>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+              {/* Related Tables */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Related Tables</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
+                      <div>
+                        <div className="font-medium text-sm">DSM-5-TR Criteria</div>
+                        <div className="text-xs text-gray-500">Diagnostic criteria table</div>
+                      </div>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
+                      <div>
+                        <div className="font-medium text-sm">Medication Dosing</div>
+                        <div className="text-xs text-gray-500">Stimulant dosing guidelines</div>
+                      </div>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
-            {/* Test Your Knowledge */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center space-x-2">
-                  <HelpCircle className="w-5 h-5" />
-                  <span>Test Your Knowledge</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Challenge yourself with questions about ADHD diagnosis and treatment.
-                </p>
-                <Button className="w-full" style={{ backgroundColor: '#00468C' }}>
-                  Start Quiz
-                </Button>
-              </CardContent>
-            </Card>
+              {/* Test Your Knowledge */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center space-x-2">
+                    <HelpCircle className="w-5 h-5" />
+                    <span>Test Your Knowledge</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Challenge yourself with questions about ADHD diagnosis and treatment.
+                  </p>
+                  <Button className="w-full" style={{ backgroundColor: '#00468C' }}>
+                    Start Quiz
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Related Articles */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Related Articles</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
-                    <div>
-                      <div className="font-medium text-sm">Autism Spectrum Disorder</div>
-                      <div className="text-xs text-gray-500">Neurodevelopmental disorders</div>
-                    </div>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
-                    <div>
-                      <div className="font-medium text-sm">Learning Disorders</div>
-                      <div className="text-xs text-gray-500">Academic difficulties</div>
-                    </div>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              {/* Related Articles */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Related Articles</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
+                      <div>
+                        <div className="font-medium text-sm">Autism Spectrum Disorder</div>
+                        <div className="text-xs text-gray-500">Neurodevelopmental disorders</div>
+                      </div>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="w-full justify-start text-left p-2 h-auto">
+                      <div>
+                        <div className="font-medium text-sm">Learning Disorders</div>
+                        <div className="text-xs text-gray-500">Academic difficulties</div>
+                      </div>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
         </div>
       </div>
 
