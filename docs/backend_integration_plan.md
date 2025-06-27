@@ -19,67 +19,11 @@
 
 ---
 
-## Phase 1: Foundation Setup
-**Estimated Time**: 2-3 hours
-
-### 1.1 Environment Configuration
-
-#### Task 1.1.1: Create Environment Variables
-- [ ] Create `.env` file in project root
-- [ ] Add Supabase configuration variables:
-  ```env
-  VITE_SUPABASE_URL=https://your-project.supabase.co
-  VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-  ```
-- [ ] Add OpenAI configuration:
-  ```env
-  VITE_OPENAI_API_KEY=your_openai_api_key_here
-  ```
-- [ ] Add optional configuration:
-  ```env
-  VITE_APP_ARTICLE_BASE_URL=https://your-frontend.com/blog/article
-  ```
-
-#### Task 1.1.2: Install Dependencies
-- [ ] Install Supabase client: `npm install @supabase/supabase-js`
-- [ ] Verify existing dependencies are sufficient for integration
-- [ ] Update TypeScript configurations if needed
-
-#### Task 1.1.3: Create Configuration Module
-- [ ] Create `src/config/environment.ts`
-- [ ] Implement environment variable validation
-- [ ] Add configuration type definitions
-- [ ] Create error handling for missing variables
 
 ### 1.2 Core Service Architecture
 
-#### Task 1.2.1: Supabase Client Setup
-- [ ] Create `src/utils/supabaseClient.ts`
-- [ ] Initialize Supabase client with configuration
-- [ ] Define core database type interfaces
-- [ ] Export typed client instance
 
-#### Task 1.2.2: OpenAI Client Setup
-- [ ] Create `src/utils/openaiClient.ts`
-- [ ] Implement OpenAI service class with Responses API
-- [ ] Add streaming response handling
-- [ ] Implement error handling and retry logic
 
-#### Task 1.2.3: Type Definitions
-- [ ] Create `src/types/` directory structure
-- [ ] Define `Article` interface matching database schema
-- [ ] Define `ChatMessage`, `ChatContext` interfaces
-- [ ] Define `ApiTrackingRecord`, `UsageStats` interfaces
-- [ ] Create `RagChatRequest` and `RagChatResponse` types
-
-### 1.3 Service Layer Foundation
-
-#### Task 1.3.1: Create Services Directory
-- [ ] Create `src/services/` directory
-- [ ] Plan service module architecture
-- [ ] Create base service patterns and error handling
-
----
 
 ## Phase 2: Database Integration
 **Estimated Time**: 4-5 hours

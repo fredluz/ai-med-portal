@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { 
   CheckCircle, 
   XCircle, 
@@ -9,7 +10,9 @@ import {
   Calendar,
   Tag,
   FileText,
-  Edit
+  Edit,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,163 +21,326 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AIChat from './AIChat';
-import PatientEducationArticle from './PatientEducationArticle';
-import MedicalADHDArticle from './MedicalADHDArticle';
+import { fetchPendingArticles, updateArticleStatus, updateArticleContent, type Article } from '@/utils/supabaseClient';
+
+export type Language = 'en' | 'es' | 'pt';
+
+// Interface for local content state management
+interface LocalContentState {
+  [articleId: string]: {
+    [language in Language]?: string
+  }
+}
 
 const ReviewDashboard = () => {
-  const [selectedContent, setSelectedContent] = useState(null);
+  // Core state
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [selectedContent, setSelectedContent] = useState<Article | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('en');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // UI state
   const [showRejectDialog, setShowRejectDialog] = useState(false);
   const [rejectComment, setRejectComment] = useState('');
   const [showAIChat, setShowAIChat] = useState(false);
-  const [activeTab, setActiveTab] = useState('patient-education');
+  const [activeTab, setActiveTab] = useState<'patient-education' | 'medical'>('patient-education');
 
-  const patientEducationArticles = [
-    {
-      id: 1,
-      title: "ADHD in the Teen Years — 2025 Update",
-      author: "Dr. Sarah Martinez",
-      language: "English",
-      status: "pending",
-      created: "2024-01-15",
-      wordCount: 2847,
-      readingLevel: "Grade 8",
-      tags: ["adhd", "teens", "parenting", "patient-education"],
-      content: <PatientEducationArticle />
-    },
-    {
-      id: 2,
-      title: "ADHD in Teens: What Parents Need to Know",
-      author: "Dr. Sarah Martinez",
-      language: "English",
-      status: "pending",
-      created: "2024-01-15",
-      wordCount: 1247,
-      readingLevel: "Grade 8",
-      tags: ["adhd", "teens", "parenting", "patient-education"],
-      content: `
-        <h1>ADHD in Teens: What Parents Need to Know</h1>
-        
-        <p class="lead">
-          Attention deficit hyperactivity disorder (ADHD) affects millions of teenagers worldwide. 
-          Understanding the signs, symptoms, and treatment options can help parents support their teens effectively.
-        </p>
+  // Local content editing state
+  const [localContentState, setLocalContentState] = useState<LocalContentState>({});
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-        <h2>What Is ADHD?</h2>
-        <p>
-          ADHD is a neurodevelopmental disorder that affects a person's ability to focus, control impulses, 
-          and manage hyperactive behaviors. While often diagnosed in childhood, ADHD continues into the 
-          teenage years and can present unique challenges during adolescence.
-        </p>
-
-        <h2>Signs of ADHD in Teenagers</h2>
-        <p>ADHD symptoms in teens may include:</p>
-        <ul>
-          <li><strong>Inattention:</strong> Difficulty focusing on schoolwork, frequently losing assignments, 
-          trouble following through on tasks</li>
-          <li><strong>Hyperactivity:</strong> Restlessness, difficulty sitting still, talking excessively</li>
-          <li><strong>Impulsivity:</strong> Acting without thinking, interrupting others, making quick decisions 
-          without considering consequences</li>
-        </ul>
-
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4">
-          <p class="text-sm">
-            <strong>Important:</strong> ADHD symptoms can be mistaken for typical teenage behavior. 
-            If symptoms significantly impact your teen's daily life, consider consulting a healthcare professional.
-          </p>
-        </div>
-
-        <h2>Treatment Options</h2>
-        <p>
-          Treatment for ADHD typically involves a combination of approaches including medication, 
-          behavioral therapy, and lifestyle modifications. Work with your teen's healthcare provider 
-          to develop a comprehensive treatment plan.
-        </p>
-
-        <h2>Supporting Your Teen</h2>
-        <p>
-          Parents can help by maintaining consistent routines, providing clear expectations, 
-          and celebrating small victories. Remember that ADHD is a medical condition, not a 
-          character flaw or result of poor parenting.
-        </p>
-      `
-    },
-    {
-      id: 3,
-      title: "Managing Diabetes: A Teen's Guide to Staying Healthy",
-      author: "AI Assistant",
-      language: "English",
-      status: "pending",
-      created: "2024-01-14",
-      wordCount: 892,
-      readingLevel: "Grade 7",
-      tags: ["diabetes", "teens", "self-care", "patient-education"],
-      content: `
-        <h1>Managing Diabetes: A Teen's Guide to Staying Healthy</h1>
-        
-        <p class="lead">
-          Living with diabetes as a teenager comes with unique challenges, but with the right knowledge 
-          and support, you can live a full, healthy life.
-        </p>
-
-        <h2>Understanding Your Condition</h2>
-        <p>
-          Diabetes affects how your body processes glucose (sugar). Whether you have Type 1 or Type 2 diabetes, 
-          managing blood sugar levels is key to staying healthy and feeling your best.
-        </p>
-      `
+  // Helper function to get the current local content for selected article/language
+  const getCurrentLocalContent = (): string => {
+    if (!selectedContent) return '';
+    
+    const localContent = localContentState[selectedContent.id]?.[selectedLanguage];
+    if (localContent !== undefined) return localContent;
+    
+    // If no local content, return the saved content from database
+    switch (selectedLanguage) {
+      case 'en': return selectedContent.content_en_rewritten || '';
+      case 'es': return selectedContent.content_es_translated || '';
+      case 'pt': return selectedContent.content_pt_translated || '';
+      default: return '';
     }
-  ];
-
-  const medicalArticles = [
-    {
-      id: 4,
-      title: "Attention-Deficit/Hyperactivity Disorder (ADHD): Clinical Overview",
-      author: "Dr. Stephen Brian Sulkes, MD & Dr. Alicia R. Pekarsky, MD",
-      language: "English",
-      status: "pending",
-      created: "2024-01-16",
-      wordCount: 4850,
-      readingLevel: "Medical Professional",
-      tags: ["adhd", "diagnosis", "treatment", "clinical-guidelines", "neurodevelopmental"],
-      content: <MedicalADHDArticle />
-    },
-    {
-      id: 5,
-      title: "Hypertension Management: Evidence-Based Approach",
-      author: "Dr. Jennifer Lee, MD",
-      language: "English",
-      status: "pending",
-      created: "2024-01-13",
-      wordCount: 1876,
-      readingLevel: "Medical Professional",
-      tags: ["hypertension", "cardiology", "treatment-guidelines"],
-      content: `
-        <h1>Hypertension Management: Evidence-Based Approach</h1>
-        
-        <h2>Classification and Diagnosis</h2>
-        <p>
-          According to current guidelines, hypertension is classified as sustained blood pressure 
-          measurements ≥130/80 mmHg. Accurate diagnosis requires proper measurement technique and 
-          confirmation over multiple visits.
-        </p>
-      `
-    }
-  ];
-
-  const getAllArticles = () => {
-    return activeTab === 'patient-education' ? patientEducationArticles : medicalArticles;
   };
 
-  const handleApprove = () => {
-    console.log('Content approved');
-    // Add approval logic here
+  // Helper function to get the saved content from database
+  const getSavedContent = (article: Article, language: Language): string => {
+    switch (language) {
+      case 'en': return article.content_en_rewritten || '';
+      case 'es': return article.content_es_translated || '';
+      case 'pt': return article.content_pt_translated || '';
+      default: return '';
+    }
   };
 
-  const handleReject = () => {
-    if (rejectComment.trim()) {
-      console.log('Content rejected:', rejectComment);
+  // Helper function to get article title or first line of content
+  const getArticleDisplayTitle = (article: Article): string => {
+    // First try to get the title from raw_json_content
+    const title = article.raw_json_content?.title;
+    if (title && title.trim() && title !== 'Unknown Title') {
+      return title;
+    }
+
+    // If no title, get the first line from content (prefer English, then others)
+    const content = article.content_en_rewritten || 
+                   article.content_es_translated || 
+                   article.content_pt_translated || '';
+    
+    if (content) {
+      // Strip HTML tags and get first meaningful line
+      const textContent = content
+        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/\s+/g, ' ')    // Normalize whitespace
+        .trim();
+      
+      // Get first sentence or first 80 characters
+      const firstSentence = textContent.split(/[.!?]/)[0];
+      const displayText = firstSentence.length > 80 
+        ? firstSentence.substring(0, 80).trim() + '...'
+        : firstSentence;
+        
+      return displayText || 'No content available';
+    }
+
+    return 'No content available';
+  };
+
+  // Check if current content differs from saved content
+  const checkHasUnsavedChanges = (articleId: string, language: Language) => {
+    const article = articles.find(a => a.id === articleId);
+    if (!article) return false;
+    
+    const localContent = localContentState[articleId]?.[language];
+    const savedContent = getSavedContent(article, language);
+    
+    return localContent !== undefined && localContent !== savedContent;
+  };
+
+  // Update local content for current article/language
+  const updateLocalContent = (content: string) => {
+    if (!selectedContent) return;
+    
+    setLocalContentState(prev => ({
+      ...prev,
+      [selectedContent.id]: {
+        ...prev[selectedContent.id],
+        [selectedLanguage]: content
+      }
+    }));
+    
+    setHasUnsavedChanges(checkHasUnsavedChanges(selectedContent.id, selectedLanguage));
+  };
+
+  // Initialize local content when article/language changes
+  useEffect(() => {
+    if (selectedContent) {
+      const currentHasChanges = checkHasUnsavedChanges(selectedContent.id, selectedLanguage);
+      setHasUnsavedChanges(currentHasChanges);
+    } else {
+      setHasUnsavedChanges(false);
+    }
+  }, [selectedContent, selectedLanguage, localContentState, articles]);
+
+  // Warning for unsaved changes on navigation
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // Reset local state for an article
+  const resetLocalChanges = () => {
+    if (!selectedContent) return;
+    
+    setLocalContentState(prev => {
+      const newState = { ...prev };
+      if (newState[selectedContent.id]) {
+        delete newState[selectedContent.id][selectedLanguage];
+        if (Object.keys(newState[selectedContent.id]).length === 0) {
+          delete newState[selectedContent.id];
+        }
+      }
+      return newState;
+    });
+    setHasUnsavedChanges(false);
+  };
+
+  // Load articles from Supabase
+  const loadArticles = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchPendingArticles();
+      setArticles(data);
+      
+      if (data.length > 0) {
+        // If selected article is no longer in the list (e.g. after status update), select the first one
+        const currentSelectedStillExists = data.find(a => a.id === selectedContent?.id);
+        if (currentSelectedStillExists) {
+          setSelectedContent(currentSelectedStillExists);
+        } else {
+          setSelectedContent(data[0]);
+        }
+      } else {
+        setSelectedContent(null);
+      }
+    } catch (err) {
+      console.error('Error loading articles:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load articles');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle article selection with unsaved changes warning
+  const handleSelectArticle = (article: Article) => {
+    if (hasUnsavedChanges) {
+      const confirmLeave = window.confirm(
+        'You have unsaved changes. Do you want to discard them and switch to a different article?'
+      );
+      if (!confirmLeave) return;
+    }
+    
+    setSelectedContent(article);
+  };
+
+  // Handle language selection with unsaved changes warning
+  const handleLanguageChange = (newLanguage: Language) => {
+    if (hasUnsavedChanges) {
+      const confirmLeave = window.confirm(
+        'You have unsaved changes. Do you want to discard them and switch language?'
+      );
+      if (!confirmLeave) return;
+    }
+    
+    setSelectedLanguage(newLanguage);
+  };
+
+  // Load articles on component mount
+  useEffect(() => {
+    loadArticles();
+  }, []);
+
+  // Approve current changes and persist to database
+  const approveCurrentChanges = async () => {
+    if (!selectedContent || !hasUnsavedChanges) return;
+    
+    const currentContent = getCurrentLocalContent();
+    setIsUpdating(true);
+    setError(null);
+    
+    try {
+      // Save the content to the database
+      await updateArticleContent(selectedContent.id, selectedLanguage, currentContent);
+      
+      // Reset local state after successful save
+      resetLocalChanges();
+      
+      // Refresh articles to get updated data
+      await loadArticles();
+      
+      console.log('Content approved and saved successfully');
+    } catch (err) {
+      console.error('Error approving changes:', err);
+      setError(err instanceof Error ? err.message : 'Failed to approve changes');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  // Handle final approval (triggers N8N webhook)
+  const handleApprove = async () => {
+    if (!selectedContent) return;
+
+    setIsUpdating(true);
+    setError(null);
+    
+    try {
+      // Trigger N8N webhook for approval
+      if (!selectedContent.processed_id) {
+        console.error('Error: processed_id is missing for the selected article. Cannot trigger webhook.');
+        setError('Missing processed_id - cannot trigger approval workflow');
+        return;
+      }
+
+      const webhookSecret = import.meta.env.VITE_N8N_WEBHOOK_SECRET;
+      const webhookUrl = import.meta.env.VITE_N8N_PUBLISH_WEBHOOK_URL;
+      
+      if (!webhookSecret || !webhookUrl) {
+        console.error('Error: N8N webhook configuration missing in environment variables');
+        setError('N8N webhook configuration missing');
+        return;
+      }
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Webhook-Secret': webhookSecret,
+          },
+          body: JSON.stringify({ id: selectedContent.processed_id }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Webhook call failed with status: ${response.status}`, errorText);
+          setError(`Approval webhook failed: ${response.status}`);
+          return;
+        }
+
+        console.log('Webhook triggered successfully for article:', selectedContent.processed_id);
+        
+        // Refresh articles list after successful webhook
+        await loadArticles();
+        
+      } catch (webhookError) {
+        console.error('Error triggering webhook:', webhookError);
+        setError('Failed to trigger approval webhook');
+      }
+    } catch (err) {
+      console.error('Error in approval process:', err);
+      setError(err instanceof Error ? err.message : 'Failed to approve article');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  // Handle rejection
+  const handleReject = async () => {
+    if (!selectedContent || !rejectComment.trim()) return;
+
+    setIsUpdating(true);
+    setError(null);
+    
+    try {
+      // Update status directly in Supabase for rejection
+      await updateArticleStatus(selectedContent.id, 'rejected');
+      
+      // TODO: Store rejection comment - may need additional table/field
+      console.log('Article rejected with comment:', rejectComment);
+      
       setShowRejectDialog(false);
       setRejectComment('');
+      
+      // Refresh articles list after rejection
+      await loadArticles();
+      
+    } catch (err) {
+      console.error('Error rejecting article:', err);
+      setError(err instanceof Error ? err.message : 'Failed to reject article');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -186,7 +352,7 @@ const ReviewDashboard = () => {
           <!DOCTYPE html>
           <html>
           <head>
-            <title>${selectedContent.title}</title>
+            <title>${getArticleDisplayTitle(selectedContent)}</title>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <script src="https://cdn.tailwindcss.com"></script>
@@ -207,7 +373,7 @@ const ReviewDashboard = () => {
               import React from 'https://esm.sh/react@18';
               import ReactDOM from 'https://esm.sh/react-dom@18/client';
               
-              const content = ${JSON.stringify(typeof selectedContent.content === 'string' ? selectedContent.content : '')};
+              const content = ${JSON.stringify(getCurrentLocalContent())};
               
               function App() {
                 return React.createElement('div', {
@@ -232,130 +398,174 @@ const ReviewDashboard = () => {
   };
 
   const handleEdit = () => {
-    console.log('Edit content:', selectedContent?.title);
-    // Add edit logic here
+    console.log('Edit content:', getArticleDisplayTitle(selectedContent!));
+    // TODO: Implement content editing functionality
+    // This could open the content in an editable text area or rich text editor
   };
 
-  const currentArticles = getAllArticles();
+  // Filter articles by type (simplified categorization)
+  const getFilteredArticles = () => {
+    // Since we don't have explicit patient-education vs medical categorization,
+    // we'll use all articles for now - this can be enhanced with tags or categories
+    return articles;
+  };
 
-  return (
-    <div className="flex h-full bg-gray-50">
-      {/* Content List with Tabs */}
-      <div className={`${showAIChat ? 'w-32' : 'w-40'} bg-white border-r border-border/50 overflow-y-auto transition-all duration-300`}>
-        <div className="p-4 border-b border-border/50">
+  // Determine article count for current filter
+  const currentArticles = getFilteredArticles();
+
+  // Show loading state
+  if (loading && articles.length === 0) {
+    return (
+      <div className="flex h-full bg-gray-50 items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading articles...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error && !isUpdating) {
+    return (
+      <div className="flex h-full bg-gray-50 items-center justify-center">
+        <div className="text-center max-w-md">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold text-foreground mb-2">Error Loading Articles</h2>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={loadArticles} variant="outline">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+    return (
+    <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+      {/* Content List */}
+      <div className={`${showAIChat ? 'w-32' : 'w-40'} bg-white border-r border-border/50 flex flex-col flex-shrink-0 transition-all duration-300`}>
+        <div className="p-4 border-b border-border/50 flex-shrink-0">
           <h2 className="text-sm font-semibold text-foreground">Review Queue</h2>
-          <p className="text-xs text-muted-foreground mt-1">{patientEducationArticles.length + medicalArticles.length} items awaiting review</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {loading ? 'Loading...' : `${articles.length} items awaiting review`}
+          </p>
         </div>
         
-        <div className="p-2">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-3">
-              <TabsTrigger value="patient-education" className="text-xs">Patient Ed</TabsTrigger>
-              <TabsTrigger value="medical" className="text-xs">Medical</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="patient-education" className="space-y-2 mt-0">
-              {patientEducationArticles.map((item) => (
+        {/* Language Selector */}
+        {selectedContent && (
+          <div className="p-2 flex-shrink-0">
+            <div className="mb-1 p-2 bg-gray-50 rounded-md">
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">Language</label>
+              <select
+                value={selectedLanguage}
+                onChange={(e) => handleLanguageChange(e.target.value as Language)}
+                className="w-full text-xs border border-gray-200 rounded px-2 py-1"
+              >
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="pt">Português</option>
+              </select>
+            </div>
+          </div>
+        )}
+
+        <div className="flex-1 overflow-y-auto px-2 min-h-0">
+          <div className="space-y-2 pb-2">
+            {loading ? (
+              <div className="space-y-2">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className="p-3">
+                    <div className="animate-pulse">
+                      <div className="h-3 bg-gray-200 rounded mb-2"></div>
+                      <div className="h-2 bg-gray-200 rounded mb-1"></div>
+                      <div className="h-2 bg-gray-200 rounded w-3/4"></div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : currentArticles.length === 0 ? (
+              <div className="text-center py-6">
+                <FileText className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">No articles found</p>
+              </div>
+            ) : (
+              currentArticles.map((article) => (
                 <Card 
-                  key={item.id} 
+                  key={article.id} 
                   className={`cursor-pointer transition-all hover:shadow-md ${
-                    selectedContent?.id === item.id ? 'ring-2 ring-primary/20 bg-primary/5' : ''
+                    selectedContent?.id === article.id ? 'ring-2 ring-primary/20 bg-primary/5' : ''
                   }`}
-                  onClick={() => setSelectedContent(item)}
+                  onClick={() => handleSelectArticle(article)}
                 >
                   <CardContent className="p-3">
                     <h3 className="font-medium text-xs text-foreground mb-2 line-clamp-2">
-                      {item.title}
+                      {getArticleDisplayTitle(article)}
                     </h3>
                     
                     <div className="space-y-1">
                       <div className="flex items-center text-xs text-muted-foreground">
                         <User className="w-2 h-2 mr-1" />
-                        <span className="truncate">{item.author}</span>
+                        <span className="truncate">System Generated</span>
                       </div>
                       
                       <div className="flex items-center text-xs text-muted-foreground">
                         <Calendar className="w-2 h-2 mr-1" />
-                        <span className="truncate">{item.created}</span>
+                        <span className="truncate">
+                          {article.created_at ? new Date(article.created_at).toLocaleDateString() : 'Unknown'}
+                        </span>
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-                          Patient Ed
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs ${
+                            article.curation_status === 'pending_review' 
+                              ? 'bg-amber-50 text-amber-700 border-amber-200'
+                              : 'bg-blue-50 text-blue-700 border-blue-200'
+                          }`}
+                        >
+                          {article.curation_status || 'pending'}
                         </Badge>
                         <span className="text-xs text-muted-foreground">
-                          {item.wordCount}w
+                          {article.content_en_rewritten?.length || 0}ch
                         </span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </TabsContent>
-            
-            <TabsContent value="medical" className="space-y-2 mt-0">
-              {medicalArticles.map((item) => (
-                <Card 
-                  key={item.id} 
-                  className={`cursor-pointer transition-all hover:shadow-md ${
-                    selectedContent?.id === item.id ? 'ring-2 ring-primary/20 bg-primary/5' : ''
-                  }`}
-                  onClick={() => setSelectedContent(item)}
-                >
-                  <CardContent className="p-3">
-                    <h3 className="font-medium text-xs text-foreground mb-2 line-clamp-2">
-                      {item.title}
-                    </h3>
-                    
-                    <div className="space-y-1">
-                      <div className="flex items-center text-xs text-muted-foreground">
-                        <User className="w-2 h-2 mr-1" />
-                        <span className="truncate">{item.author}</span>
-                      </div>
-                      
-                      <div className="flex items-center text-xs text-muted-foreground">
-                        <Calendar className="w-2 h-2 mr-1" />
-                        <span className="truncate">{item.created}</span>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
-                          Medical
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {item.wordCount}w
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </TabsContent>
-          </Tabs>
+              ))
+            )}
+          </div>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {selectedContent ? (
           <>
             {/* Content Header */}
-            <div className="bg-white border-b border-border/50 p-6">
+            <div className="bg-white border-b border-border/50 p-6 flex-shrink-0">
               <div className="flex items-start justify-between">
                 <div>
                   <h1 className="text-xl font-semibold text-foreground mb-2">
-                    {selectedContent.title}
+                    {getArticleDisplayTitle(selectedContent)}
                   </h1>
                   <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                     <span className="flex items-center">
                       <User className="w-4 h-4 mr-1" />
-                      {selectedContent.author}
+                      System Generated
                     </span>
                     <span className="flex items-center">
                       <Clock className="w-4 h-4 mr-1" />
-                      {selectedContent.created}
+                      {selectedContent.created_at ? new Date(selectedContent.created_at).toLocaleDateString() : 'Unknown date'}
                     </span>
-                    <span>{selectedContent.readingLevel} reading level</span>
+                    <span>Language: {selectedLanguage.toUpperCase()}</span>
+                    {hasUnsavedChanges && (
+                      <Badge variant="outline" className="text-amber-600 border-amber-300 bg-amber-50">
+                        Unsaved Changes
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 
@@ -370,7 +580,7 @@ const ReviewDashboard = () => {
                     <span>AI Assistant</span>
                   </Button>
                   
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={handlePreview}>
                     <Eye className="w-4 h-4 mr-2" />
                     Preview
                   </Button>
@@ -379,20 +589,43 @@ const ReviewDashboard = () => {
             </div>
 
             {/* Split Content Area */}
-            <div className="flex-1 flex">
+            <div className="flex-1 flex min-h-0">
               {/* Content Editor */}
-              <div className="flex-1 p-6 overflow-y-auto">
+              <div className="flex-1 p-6 overflow-y-auto min-w-0">
                 <div className="max-w-4xl mx-auto">
                   <div className="bg-white rounded-lg medical-shadow p-8">
-                    {typeof selectedContent.content === 'string' ? (
-                      <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: selectedContent.content }}>
-                      </div>
-                    ) : (
-                      <div className="max-w-none">
-                        {selectedContent.content}
-                      </div>
-                    )}
+                    <div className="prose prose-lg max-w-none">
+                      {getCurrentLocalContent() ? (
+                        <ReactMarkdown>
+                          {getCurrentLocalContent()}
+                        </ReactMarkdown>
+                      ) : (
+                        <div className="text-muted-foreground italic">
+                          No content available for {selectedLanguage.toUpperCase()} language
+                        </div>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Save Changes Button (if there are unsaved changes) */}
+                  {hasUnsavedChanges && (
+                    <div className="mt-6 flex justify-center">
+                      <Button 
+                        onClick={approveCurrentChanges}
+                        disabled={isUpdating}
+                        className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2"
+                      >
+                        {isUpdating ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          'Save Changes'
+                        )}
+                      </Button>
+                    </div>
+                  )}
 
                   {/* Article Action Buttons */}
                   <div className="mt-6 flex justify-center space-x-4">
@@ -419,28 +652,42 @@ const ReviewDashboard = () => {
 
               {/* AI Chat Sidebar */}
               {showAIChat && (
-                <div className="w-80 border-l border-border/50">
-                  <AIChat onClose={() => setShowAIChat(false)} />
+                <div className="w-80 border-l border-border/50 flex-shrink-0">
+                  <AIChat 
+                    onClose={() => setShowAIChat(false)}
+                    article={selectedContent}
+                    selectedLanguage={selectedLanguage}
+                    localContent={getCurrentLocalContent()}
+                    onApplySuggestion={updateLocalContent}
+                    onLoadingChange={setIsUpdating}
+                  />
                 </div>
               )}
             </div>
 
             {/* Action Bar */}
-            <div className="bg-white border-t border-border/50 p-6">
+            <div className="bg-white border-t border-border/50 p-6 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <Badge variant="outline" className="text-sm px-3 py-1 border-amber-200 bg-amber-50 text-amber-800">
-                    Medical Review Required
+                    {selectedContent.curation_status || 'Pending Review'}
                   </Badge>
                   <span className="text-sm text-muted-foreground">
-                    Last modified 2 hours ago
+                    Last modified {selectedContent.created_at ? new Date(selectedContent.created_at).toLocaleDateString() : 'Unknown'}
                   </span>
+                  {isUpdating && (
+                    <div className="flex items-center text-sm text-blue-600">
+                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      Processing...
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center space-x-4">
                   <Button 
                     variant="outline"
                     onClick={() => setShowRejectDialog(true)}
+                    disabled={isUpdating}
                     className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300 px-6 py-2 font-medium transition-all duration-200"
                   >
                     <XCircle className="w-4 h-4 mr-2" />
@@ -449,13 +696,30 @@ const ReviewDashboard = () => {
                   
                   <Button 
                     onClick={handleApprove} 
-                    className="bg-green-600 text-white hover:bg-green-700 px-6 py-2 font-medium shadow-md hover:shadow-lg transition-all duration-200"
+                    disabled={isUpdating || hasUnsavedChanges}
+                    className="bg-green-600 text-white hover:bg-green-700 px-6 py-2 font-medium shadow-md hover:shadow-lg transition-all duration-200 disabled:bg-gray-400"
                   >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Approve & Publish
+                    {isUpdating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Approve & Publish
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>
+              
+              {hasUnsavedChanges && (
+                <div className="mt-3 text-sm text-amber-600 flex items-center">
+                  <AlertCircle className="w-4 h-4 mr-1" />
+                  You have unsaved changes. Please save before approving.
+                </div>
+              )}
             </div>
 
             {/* Reject Dialog */}
@@ -476,16 +740,27 @@ const ReviewDashboard = () => {
                   <div className="flex justify-end space-x-3">
                     <Button 
                       variant="outline" 
-                      onClick={() => setShowRejectDialog(false)}
+                      onClick={() => {
+                        setShowRejectDialog(false);
+                        setRejectComment('');
+                      }}
+                      disabled={isUpdating}
                     >
                       Cancel
                     </Button>
                     <Button 
                       onClick={handleReject}
-                      disabled={!rejectComment.trim()}
+                      disabled={!rejectComment.trim() || isUpdating}
                       className="bg-red-600 text-white hover:bg-red-700"
                     >
-                      Reject Content
+                      {isUpdating ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Rejecting...
+                        </>
+                      ) : (
+                        'Reject Content'
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -497,7 +772,14 @@ const ReviewDashboard = () => {
             <div className="text-center">
               <FileText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-2">Select Content to Review</h3>
-              <p className="text-muted-foreground">Choose an item from the queue to begin reviewing</p>
+              <p className="text-muted-foreground">
+                {articles.length === 0 ? 'No articles available for review' : 'Choose an item from the queue to begin reviewing'}
+              </p>
+              {articles.length === 0 && !loading && (
+                <Button onClick={loadArticles} variant="outline" className="mt-4">
+                  Refresh
+                </Button>
+              )}
             </div>
           </div>
         )}

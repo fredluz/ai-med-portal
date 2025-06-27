@@ -84,11 +84,6 @@ npm install -D typescript @types/node
 # For React:
 npm install react react-dom @types/react @types/react-dom
 
-# For Vue:
-npm install vue @vue/typescript
-
-# For Angular:
-npm install @angular/core @angular/common
 ```
 
 ### Framework-Agnostic Configuration
